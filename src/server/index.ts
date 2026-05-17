@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import path from 'path'
+import { existsSync } from 'fs'
 import env from './config/env'
 import { prisma } from './config/database'
 import { redis } from './config/redis'
@@ -112,6 +114,19 @@ app.use('/api/chatbot', chatbotRoutes)
 app.use('/api/integrations', integrationRoutes)
 app.use('/api/super-admin', superAdminRoutes)
 app.use('/api/leads', leadRoutes)
+
+// Serve frontend static files
+const clientDir = path.resolve('dist/client')
+if (existsSync(clientDir)) {
+  app.use(express.static(clientDir))
+  // SPA fallback: serve index.html for non-API GET routes
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/api/')) return next()
+    const indexPath = path.join(clientDir, 'index.html')
+    if (existsSync(indexPath)) return res.sendFile(indexPath)
+    next()
+  })
+}
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
