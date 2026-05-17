@@ -75,24 +75,16 @@ app.use(globalLimiter)
 
 // Health check
 app.get('/health', async (_req, res) => {
-  try {
-    await prisma.$queryRaw`SELECT 1`
-    await redis.ping()
-    res.json({
-      success: true,
-      status: 'healthy',
-      timestamp: new Date().toISOString(),
-      database: 'connected',
-      redis: 'connected',
-      uptime: process.uptime(),
-    })
-  } catch {
-    res.status(503).json({
-      success: false,
-      status: 'unhealthy',
-      timestamp: new Date().toISOString(),
-    })
-  }
+  const dbOk = await prisma.$queryRaw`SELECT 1`.then(() => true).catch(() => false)
+  const redisOk = await redis.ping().then(() => true).catch(() => false)
+  res.json({
+    success: dbOk && redisOk,
+    status: dbOk && redisOk ? 'healthy' : 'degraded',
+    timestamp: new Date().toISOString(),
+    database: dbOk ? 'connected' : 'disconnected',
+    redis: redisOk ? 'connected' : 'disconnected',
+    uptime: process.uptime(),
+  })
 })
 
 // API Routes
