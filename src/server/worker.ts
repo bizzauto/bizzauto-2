@@ -5,7 +5,7 @@ import { redis } from './config/redis'
 import { logger } from './config/logger'
 import { WhatsAppService } from './services/whatsapp.service'
 import { EmailService } from './services/email.service'
-import { CampaignService } from './services/campaigns.service'
+import { CampaignsService } from './services/campaigns.service'
 import { AutomationService } from './services/automation.service'
 import { SocialService } from './services/social.service'
 import env from './config/env'
@@ -100,16 +100,16 @@ const campaignWorker = new Worker(
     logger.info(`Processing Campaign job: ${job.id}`)
     switch (job.name) {
       case 'start':
-        await CampaignService.startCampaign(job.data.campaignId)
+        await CampaignsService.startCampaign(job.data.campaignId)
         break
       case 'process-drip':
-        await CampaignService.processDripQueue(job.data.campaignId)
+        await CampaignsService.processDripQueue(job.data.campaignId)
         break
       case 'pause':
-        await CampaignService.pauseCampaign(job.data.campaignId)
+        await CampaignsService.pauseCampaign(job.data.campaignId)
         break
       case 'resume':
-        await CampaignService.resumeCampaign(job.data.campaignId)
+        await CampaignsService.resumeCampaign(job.data.campaignId)
         break
       default:
         logger.warn(`Unknown Campaign job: ${job.name}`)
