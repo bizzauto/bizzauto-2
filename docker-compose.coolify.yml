@@ -43,6 +43,12 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    command: >
+      sh -c "
+        npx prisma generate &&
+        npx prisma db push --accept-data-loss &&
+        node dist/server/index.js
+      "
 
   bizzauto-worker:
     build:
