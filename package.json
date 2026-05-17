@@ -11,7 +11,7 @@
     "dev:all": "concurrently \"npm run server\" \"npm run dev\" \"npm run worker\"",
     "build": "npm run build:client && npm run build:server",
     "build:client": "tsc && vite build",
-    "build:server": "tsc -p tsconfig.server.json && node scripts/build-server.mjs",
+    "build:server": "node scripts/build-server.mjs",
     "start": "node dist/server/index.js",
     "worker:prod": "node dist/server/worker.js",
     "prisma:generate": "prisma generate",
