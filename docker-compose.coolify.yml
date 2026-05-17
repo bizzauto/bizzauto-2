@@ -47,14 +47,14 @@ services:
       sh -c "
         npx prisma generate &&
         npx prisma db push --accept-data-loss &&
-        node dist/server/index.js
+        node dist/server/index.cjs
       "
 
   bizzauto-worker:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["node", "dist/server/worker.js"]
+    command: ["node", "dist/server/worker.cjs"]
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}

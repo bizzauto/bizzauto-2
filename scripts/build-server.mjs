@@ -7,13 +7,14 @@ await esbuild.build({
   platform: 'node',
   target: 'node20',
   outdir: 'dist/server',
+  outExtension: { '.js': '.cjs' },
   external: [
     '@prisma/client',
     'bullmq',
     'sharp',
     'html-pdf-node',
   ],
-  format: 'esm',
+  format: 'cjs',
   sourcemap: true,
 })
 
