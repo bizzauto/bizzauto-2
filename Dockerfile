@@ -4,15 +4,16 @@ WORKDIR /app
 # Install dependencies
 FROM base AS deps
 COPY package.json package-lock.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
-# Build frontend
+# Build everything
 FROM base AS builder
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npx prisma generate
 RUN npm run build:client
+RUN node scripts/build-server.mjs
 
 # Production image
 FROM node:20-alpine AS runner
