@@ -10,9 +10,7 @@ RUN npm ci
 COPY . .
 
 RUN npx prisma generate
-RUN npm run build:client
-RUN node scripts/build-server.mjs
 
 EXPOSE 4000
 
-CMD ["node", "dist/server/index.js"]
+CMD ["npx", "tsx", "src/server/index.ts"]
