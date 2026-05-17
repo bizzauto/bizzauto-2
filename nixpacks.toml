@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "python3", "gcc"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = [
+  "npx prisma generate",
+  "npm run build:client",
+  "node scripts/build-server.mjs"
+]
+
+[phases.start]
+cmd = "node dist/server/index.js"
